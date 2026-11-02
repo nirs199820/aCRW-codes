@@ -8,16 +8,6 @@ license: MIT
 authors:
   - given-names: Nir
     family-names: Sherf
-  - given-names: Joshua
-    family-names: Uhlig
-  - given-names: Jan
-    family-names: Wójcik
-  - given-names: Ralf
-    family-names: Metzler
-  - given-names: Yael
-    family-names: Roichman
-  - given-names: Erik
-    family-names: Kalz
 keywords:
   - active matter
   - chiral random walk
