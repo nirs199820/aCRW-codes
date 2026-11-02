@@ -3,12 +3,7 @@
   "upload_type": "software",
   "description": "Python simulation and figure-generation code accompanying the manuscript Active Chiral Random Walk. The archive contains the active chiral random-walk implementation, the continuum chiral active Brownian-particle comparison solver, and the scripts used to generate manuscript Figures 1--6.",
   "creators": [
-    {"name": "Sherf, Nir"},
-    {"name": "Uhlig, Joshua"},
-    {"name": "Wójcik, Jan"},
-    {"name": "Metzler, Ralf"},
-    {"name": "Roichman, Yael"},
-    {"name": "Kalz, Erik"}
+    {"name": "Sherf, Nir"}
   ],
   "keywords": [
     "active matter",
