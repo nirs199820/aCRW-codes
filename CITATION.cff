@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this software record and the associated manuscript."
+title: "aCRW codes"
+type: software
+version: 1.0.0
+date-released: 2026-11-02
+license: MIT
+authors:
+  - given-names: Nir
+    family-names: Sherf
+  - given-names: Joshua
+    family-names: Uhlig
+  - given-names: Jan
+    family-names: Wójcik
+  - given-names: Ralf
+    family-names: Metzler
+  - given-names: Yael
+    family-names: Roichman
+  - given-names: Erik
+    family-names: Kalz
+keywords:
+  - active matter
+  - chiral random walk
+  - persistent random walk
+  - odd diffusion
+  - chiral active Brownian particle
