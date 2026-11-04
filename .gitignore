@@ -5,6 +5,8 @@ __pycache__/
 *.nbc
 *.nbi
 .pytest_cache/
+.matplotlib-cache/
+.numba-cache/
 
 # Generated figure and numerical outputs
 Figures -ACRW/

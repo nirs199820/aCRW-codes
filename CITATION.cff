@@ -1,6 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite this software record and the associated manuscript."
 title: "aCRW codes"
+repository-code: "https://github.com/nirs199820/aCRW-codes"
 type: software
 version: 1.0.0
 date-released: 2026-11-02

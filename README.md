@@ -1,26 +1,26 @@
 # aCRW codes
 
-Simulation and figure-generation code accompanying the manuscript **Active Chiral Random Walk**.
+Python simulation and figure-generation code accompanying **Active Chiral Random Walk**.
+This repository follows the manuscript's current numbering, **Figures 1–6**. The composite
+called “Figure 18” during development is now **Figure 5**, not an additional figure.
+Generated figures, numerical caches and manuscript files are intentionally excluded.
 
-The repository contains the Python implementation of the two-dimensional active chiral random walk (aCRW), the continuum chiral active Brownian-particle solver used for comparison, and the scripts used to generate Figures 1--6 of the manuscript. Generated figures and simulation outputs are intentionally not included.
+## Contents
 
-## Repository contents
+- `src_python_new/`: aCRW dynamics, analysis and orientation-resolved distribution solvers, including the cABP kinetic solver.
+- `figure_scripts/`: the six manuscript figure entry points and a Figure 5 rendering helper.
+- `tests/`: handedness, boundary-kernel, normalization and transport-estimator checks.
 
-```text
-├── src_python_new/  Python aCRW and cABP implementations
-└── figure_scripts/  Figure-generation scripts
-```
+Current figure entry points:
 
-The figure scripts are:
+1. `figure1_trajectories.py`: four representative walker trajectories.
+2. `figure2_distribution_flux.py`: specular-wall density and polarization, for central and near-wall sources.
+3. `figure3_msd.py`: MSD, even/odd coefficient checks, and diagonal/off-diagonal correlations.
+4. `figure4_diffusion_phase.py`: normalized effective-diffusion phase diagram.
+5. `figure5_cabp_vacf_msd.py`: composite bulk comparison and near-wall contours under both cABP maps.
+6. `figure6_steady_state_reflective_boundaries.py`: specular versus randomized scattering only, with split-time maps and a final profile.
 
-1. `figure1_trajectories.py` -- representative aCRW trajectories.
-2. `figure2_distribution_flux.py` -- probability density and flux.
-3. `figure3_msd.py` -- MSD and diagonal/off-diagonal velocity correlations.
-4. `figure4_diffusion_phase.py` -- normalized effective-diffusion phase diagram.
-5. `figure5_cabp_vacf_msd.py` -- aCRW/cABP MSD and velocity-correlation comparison.
-6. `figure6_steady_state_reflective_boundaries.py` -- steady states for three boundary rules.
-
-## Python setup
+## Setup and execution
 
 Python 3.10 or newer is recommended.
 
@@ -31,27 +31,117 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Run a figure script from the repository root, for example:
+Run from the repository root. Outputs are generated under the Git-ignored
+`Figures -ACRW/` directory. No pre-existing desktop folders, SVGs or simulation
+caches are required. Times New Roman has portable serif fallbacks.
 
 ```bash
+python figure_scripts/figure2_distribution_flux.py
+python figure_scripts/figure3_msd.py
 python figure_scripts/figure5_cabp_vacf_msd.py
+python figure_scripts/figure6_steady_state_reflective_boundaries.py
 ```
 
-The scripts create their output directories under `Figures -ACRW/`. Those generated files are excluded from version control.
+Figure 5 is expensive: its full defaults solve four confined cABP cases to time
+1000. First try a small end-to-end execution check:
 
-Some ensemble calculations, especially Figures 3 and 5, are computationally intensive. Their random seeds and ensemble sizes are set near the top of each script.
+```bash
+python figure_scripts/figure5_cabp_vacf_msd.py --smoke-test --workers 2
+python figure_scripts/figure3_msd.py --particles 2000 --batches 10 --steps 150
+```
 
-## Reproducibility notes
+Smoke-test results are **not publication results**. Use a separate `--output-dir`
+for exploratory settings. Once full Figure 5 data exist, `--plot-only` replots
+without propagation. Its `--refine`, `--dt`, `--n-phi` and `--workers` options
+control resolution and resources. Figure 2 and Figure 3 reuse local caches;
+`--recompute` forces propagation. Figure 6 provides `--plot-only`.
 
-- The repository records the source code used for the manuscript, not pre-generated figures.
-- Figure scripts write PDF/SVG and JSON metadata files containing the numerical and plotting parameters used in each run.
-- The archive is Python-only; the paper figures are produced by the scripts in `figure_scripts/`.
-- See `SOURCE_MANIFEST.md` for the provenance and selection of the archived files.
+## Scientific conventions and current settings
 
-## Citation
+Positive `q_c=q_L-q_R` denotes counter-clockwise turning. Step length and update
+duration are one. The two-component and four-heading implementations document
+their own internal basis orders; physical turning signs are unchanged.
 
-Please cite the software using `CITATION.cff`. After the Zenodo deposit is published, add the Zenodo DOI to both `CITATION.cff` and this README. The associated manuscript should also be cited once its bibliographic details are final.
+### Figure 2
+
+The default is specular reflection on 150×150 sites, at time 2000, with
+`(q_p,q_c)=(0.1,-0.8)`, uniform initial headings and point sources at
+`(75,75)` and `(75,5)`. Rejected normal headings reverse at the departure site.
+This is equivalent to the old blocked-hop “flipping” rule for cardinal headings.
+
+The default arrows show **polarization** `m=sum_d e_d P_d`, correctly labelled
+`|m|/|m|_max`; density is labelled `rho/rho_max`. The optional
+`--flux-definition outgoing` instead uses post-coin populations and the label
+`|J|/|J|_max`. That outgoing moment is not an independently antisymmetrized net
+bond-current measurement.
+
+### Figure 3
+
+Defaults: 100,000 trajectories per walker, 500 updates, 50 independent batches
+of 2000. Parameter pairs are `(0,0)`, `(0,0.5)`, `(0.5,0.2)`, `(-0.5,0.2)`.
+Panel (a) is MSD; panel (b) stacks `D_eff` above `D_odd`; (c,d) show the
+diagonal and off-diagonal correlations. `D_eff` is a free-intercept MSD slope
+divided by four over times 100–500. `D_odd` is one half the measured off-diagonal
+correlation sum through lag 20.
+
+Measured circles carry **one sample standard deviation across independent
+batches**, not SEM or a confidence interval. Theory is shown as stars. The odd
+check is a trajectory-based Green–Kubo estimate, not an independent current
+response. The separate cutoff diagnostic retains its documented 95% band.
+
+### Figure 5 — formerly working Figure 18
+
+All four panels use weak `(0.9,0.1)` and strong `(0.6,0.4)` turning, in green
+and blue. The leading map uses `D_r=1-q_p, omega=q_c`; the correlation map uses
+`D_r=-log(abs(q_p+i*q_c)), omega=arg(q_p+i*q_c)`. Both use speed one and zero
+independent translational Brownian diffusion.
+
+Bulk markers are regenerated by fresh, explicitly seeded Monte Carlo, not
+digitized from an SVG; realizations need not match every old exported marker.
+Near-wall 90% highest-density contours are shown at times 50,100,200,500,1000,
+in a square of side 151. A Gaussian source at `(75.5,10.5)`, with nominal
+`R95=5`, is conditioned on the box; headings are uniform. Both models use
+specular walls. The leading-map cABP uses the SAME original lattice comparison,
+not a re-inferred lattice coin.
+
+The cABP solver uses Strang angular convolution and minmod-limited spatial
+finite volumes with SSP RK2. Defaults are spatial spacing 0.5, 64 angular
+bins and macro time step 0.2 (with CFL substeps if needed). Conservative
+observation bins have equal width `151/76`. The driver checks positivity,
+mass, initial conditions and angular first-harmonic accuracy; these checks
+are not themselves a grid-convergence study.
+
+Helpers: `src_python_new/figure5_wall_solver.py` and
+`figure_scripts/figure5_plot.py`.
+
+### Figure 6
+
+Only **specular** and **randomized** walls are displayed at `(0.6,0.2)` on
+41×41 sites, starting from a cell-integrated Gaussian restricted to the central
+5×5 sites, with uniform headings. Randomized collisions select among **all
+four** headings, including outward ones; subsequent hops obey the wall rule.
+
+Each square combines the upper spatial half at time 150 and lower spatial
+half at time 5000, preserving physical aspect ratio. The dashed separator
+is not a physical wall. The time halves use separate symmetric colour
+scales. The final profile is `E(x)=mean_y(rho)/rho_bar-1`.
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Set `NUMBA_NUM_THREADS` and `OPENBLAS_NUM_THREADS` if resource limits require
+it. Smoke tests and the unit suite do not replace full manuscript calculations.
+
+## Citation and Zenodo
+
+Use `CITATION.cff` for software attribution. `SOURCE_MANIFEST.md` records
+provenance and exclusions. Pushing GitHub main does not change an already
+published Zenodo version; archive a new release when the updated snapshot
+is ready.
 
 ## License
 
-This software is released under the MIT License. See `LICENSE`.
+MIT; see `LICENSE`.

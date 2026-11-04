@@ -1,7 +1,7 @@
 {
   "title": "aCRW codes",
   "upload_type": "software",
-  "description": "Python simulation and figure-generation code accompanying the manuscript Active Chiral Random Walk. The archive contains the active chiral random-walk implementation, the continuum chiral active Brownian-particle comparison solver, and the scripts used to generate manuscript Figures 1--6.",
+  "description": "Python simulation and source-only reproduction code for manuscript Figures 1--6 of Active Chiral Random Walk. Figure 2 uses specular walls and plots density and polarization; Figure 3 includes even/odd Green--Kubo transport checks; Figure 5 is the composite bulk and near-wall comparison under both cABP maps (formerly working Figure 18); Figure 6 compares specular and randomized walls without coin scattering. Generated figures and numerical caches are excluded.",
   "creators": [
     {"name": "Sherf, Nir"}
   ],
